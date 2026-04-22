@@ -1,93 +1,82 @@
 <template>
-  <div class="fixed-top top-panel container">
-    <div class="row">
-      <div class="col">
-        <!-- 日本列島ここが中心の碑 @37.5289367,137.1853999 -->
-        <map-component
-          ref="map"
-          class="map-area"
-          v-on:location-found="onLocationFound"
-          v-bind:latitude="37.5289367"
-          v-bind:longitude="137.1853999"
-          v-bind:zoom="5"
-        >
-        </map-component>
-      </div>
-    </div>
-    <div
-      class="row button-area d-flex justify-content-between align-items-center m-0 my-2 flex-row"
-    >
+  <div class="main">
+    <div class="map-panel">
+      <!-- 日本列島ここが中心の碑 @37.5289367,137.1853999 -->
+      <map-component
+        ref="map"
+        class="map-area"
+        @location-found="onLocationFound"
+        :latitude="37.5289367"
+        :longitude="137.1853999"
+        :zoom="5"
+      />
       <div
-        class="d-flex justify-content-start align-items-center col-8 flex-row"
+        class="button-area d-flex flex-row justify-content-between align-items-center"
       >
-        <button
-          v-on:click="onLocateButtonClick"
-          class="btn btn-primary mx-0 px-4 py-1 text-nowrap"
-          v-bind:disabled="trackButtonChecked"
-        >
-          現在位置の取得
-        </button>
-        <button
-          v-on:click="onRecordButtonClick"
-          class="btn btn-primary mx-3 px-4 py-1 text-nowrap"
-          v-bind:disabled="trackButtonChecked || !locationFoundEvent"
-        >
-          記録
-        </button>
-      </div>
-      <div class="d-flex justify-content-end align-items-center col-4 flex-row">
-        <div class="mx-3 my-0 p-0 text-nowrap">
-          <label
-            class="form-check-label text-nowrap hide-on-small-screen"
-            for="trackButton"
-            >自動追跡</label
+        <div class="d-flex flex-row justify-content-start align-items-center">
+          <button
+            @click="onLocateButtonClick"
+            class="btn btn-primary m-0 px-4 py-1 text-nowrap"
+            :disabled="trackButtonChecked"
           >
+            現在位置の取得
+          </button>
+          <button
+            @click="onRecordButtonClick"
+            class="btn btn-primary mx-3 my-0 px-4 py-1 text-nowrap"
+            :disabled="trackButtonChecked || !locationFoundEvent"
+          >
+            記録
+          </button>
         </div>
-        <div class="form-check form-switch">
-          <input
-            v-model="trackButtonChecked"
-            v-on:change="onTrackLocateButtonChange"
-            class="form-check-input custom-switch"
-            type="checkbox"
-            role="switch"
-            id="trackButton"
-          />
+        <div class="d-flex flex-row justify-content-end align-items-center">
+          <div class="mx-3 my-0 p-0 text-nowrap">
+            <label
+              class="hide-on-small-screen form-check-label text-nowrap"
+              for="trackButton"
+            >
+              自動追跡
+            </label>
+          </div>
+          <div class="form-check form-switch">
+            <input
+              v-model="trackButtonChecked"
+              @change="onTrackLocateButtonChange"
+              class="form-check-input custom-switch"
+              type="checkbox"
+              role="switch"
+              id="trackButton"
+            />
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  <div class="log-data container">
-    <div class="row">
-      <div class="col align-self-center">
+    <div class="log-panel">
+      <div class="log-data">
         <data-table
-          v-bind:data="logs"
-          v-bind:columns="columns"
-          v-bind:options="options"
-          v-on:select="showLocation2"
-          class="display w-100"
+          :data="logs"
+          :columns="columns"
+          :options="options"
+          @select="showLocation2"
+          class="display"
         >
           <template #column-0="props">
             <div class="datetime-column">
               {{ getTimeString(props.rowData.timestamp) }}
             </div>
           </template>
+          <template #column-1="props">
+            <div class="address-column">
+              {{ props.rowData.address }}
+            </div>
+          </template>
         </data-table>
       </div>
-    </div>
-  </div>
-  <div class="footer-area container">
-    <div class="row">
       <div
-        class="col d-flex justify-content-center align-items-center flex-row"
+        class="footer-area d-flex flex-column justify-content-start align-items-center"
       >
-        <div class="px-2">CID: {{ cid }}</div>
-      </div>
-    </div>
-    <div class="row">
-      <div
-        class="col d-flex justify-content-center align-items-center flex-row"
-      >
-        <div class="px-2">Version: {{ version }}</div>
+        <div class="m-0 p-0">CID: {{ cid }}</div>
+        <div class="m-0 p-0">Version: {{ version }}</div>
       </div>
     </div>
   </div>
@@ -264,17 +253,17 @@ async function postLocation() {
 onMounted(async () => {
   console.log("MainComponent.onMounted");
   try {
-    // CIDの取得
-    const resClient = await axios.get(`/api/v1/client`, {
-      withCredentials: true,
-    });
-    cid.value = resClient.data?.cid ?? "-----";
-
     // バージョン情報の取得
     const resVersion = await axios.get(`/api/v1/misc/version`, {
       withCredentials: true,
     });
     version.value = resVersion.data?.version ?? "-----";
+
+    // CIDの取得
+    const resClient = await axios.get(`/api/v1/client`, {
+      withCredentials: true,
+    });
+    cid.value = resClient.data?.cid ?? "-----";
 
     // 位置情報の一覧の取得
     if (true) {
@@ -314,34 +303,115 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-.top-panel {
-  height: 60vh;
+.main {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+@media (max-width: 767px) {
+  .main {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: stretch;
+  }
+
+  .map-panel {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 60%;
+  }
+
+  .log-panel {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 40%;
+  }
+}
+
+@media (min-width: 768px) {
+  .main {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: stretch;
+  }
+
+  .map-panel {
+    margin: 0;
+    padding: 0;
+    width: 60%;
+    height: 100%;
+  }
+
+  .log-panel {
+    margin: 0;
+    padding: 0;
+    width: 40%;
+    height: 100%;
+  }
+}
+
+.map-panel {
   background: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+
+  .map-area {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: calc(100% - 4rem);
+  }
+
+  .button-area {
+    margin: 0;
+    padding: 0.5rem 1rem;
+    width: 100%;
+    height: 4rem;
+  }
 }
 
-.map-area {
-  height: calc(60vh - 4em);
-}
-
-.button-area {
-  height: 2em;
-}
-
-.log-data {
-  margin-top: 60vh;
+.log-panel {
   background: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+  overflow-y: auto;
+
+  .log-data {
+    margin: 0;
+    padding: 0 1rem;
+    width: 100%;
+  }
+
+  .footer-area {
+    font-size: x-small;
+    margin: 1rem;
+  }
 }
+
 .datetime-column {
   font-family: ui-monospace;
-  font-size: small;
+  white-space: nowrap;
 }
+
+.address-column {
+  white-space: nowrap;
+}
+
 .custom-switch {
   transform: scale(1.6);
 }
-.footer-area {
-  font-size: x-small;
-  margin-top: 1em;
-}
+
 @media (max-width: 440px) {
   .hide-on-small-screen {
     display: none;
