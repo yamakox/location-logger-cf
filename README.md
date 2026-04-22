@@ -8,7 +8,7 @@ Laravel+Vue3で作った位置情報を記録するSPAの習作を、Cloudflare 
   - Leaflet, @geolonia/open-reverse-geocoderなどを使用
 - バックエンド: Hono + drizzle
 
-<img src="./screenshot.png" width="25%" alt="スクリーンショット">
+<img src="./screenshot.png" width="1200px" alt="スクリーンショット">
 
 ## セットアップ
 
