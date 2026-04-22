@@ -307,11 +307,11 @@ onMounted(async () => {
   margin: 0;
   padding: 0;
   width: 100vw;
-  height: 100vh;
+  height: 100svh;
   overflow: hidden;
 }
 
-@media (max-width: 767px) {
+@media (orientation: portrait) {
   .main {
     display: flex;
     flex-direction: column;
@@ -334,7 +334,7 @@ onMounted(async () => {
   }
 }
 
-@media (min-width: 768px) {
+@media (orientation: landscape) {
   .main {
     display: flex;
     flex-direction: row;
