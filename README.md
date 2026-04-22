@@ -1,6 +1,14 @@
 # Location Logger for Cloudflare Workers, D1
 
-Cloudflare D1を使って位置情報を記録するSPAを実装しました。
+Laravel+Vue3で作った位置情報を記録するSPAの習作を、Cloudflare WorkersとD1を使って実装し直しました。
+
+- Cloudflare Workers
+- Cloudflare D1
+- フロントエンド: Vue
+  - Leaflet, @geolonia/open-reverse-geocoderなどを使用
+- バックエンド: Hono + drizzle
+
+<img src="./screenshot.png" width="50%" alt="スクリーンショット">
 
 ## セットアップ
 
