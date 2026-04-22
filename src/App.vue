@@ -6,5 +6,4 @@ import MainComponent from './components/MainComponent.vue'
   <main-component />
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>
