@@ -15,8 +15,6 @@ coverage
 *.local
 
 # Editor directories and files
-.vscode/*
-!.vscode/extensions.json
 .idea
 *.suo
 *.ntvs*
@@ -43,4 +41,4 @@ __screenshots__/
 .dev.vars*
 !.dev.vars.example
 .env*
-!.env.example
+!.env*.example

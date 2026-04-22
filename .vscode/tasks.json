@@ -1,0 +1,101 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "T001: npm install",
+      "type": "shell",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "command": "npm i"
+    },
+    {
+      "label": "T002: create D1 database",
+      "type": "shell",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "command": "npx wrangler d1 create location_logger_db --binding DB --use-remote"
+    },
+    {
+      "label": "T003: Generate types from Worker configuration",
+      "type": "shell",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "command": "npx wrangler types"
+    },
+    {
+      "label": "T004: Generate migrations",
+      "type": "shell",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "command": "npx drizzle-kit generate"
+    },
+    {
+      "label": "T011: Migrate D1 database",
+      "type": "shell",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "command": "npx drizzle-kit migrate"
+    },
+    {
+      "label": "T012: Show database tables",
+      "type": "shell",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "command": "npx wrangler d1 execute location_logger_db --remote --command \"SELECT tbl_name, sql FROM sqlite_schema WHERE type ='table';\""
+    },
+    {
+      "label": "T013: Show data of clients table",
+      "type": "shell",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "command": "npx wrangler d1 execute location_logger_db --remote --command \"SELECT * FROM clients;\""
+    },
+    {
+      "label": "T014: Show data of locations table",
+      "type": "shell",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "command": "npx wrangler d1 execute location_logger_db --remote --command \"SELECT * FROM locations;\""
+    },
+    {
+      "label": "T101: npm run dev",
+      "type": "shell",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "command": "npm run dev"
+    },
+    {
+      "label": "T102: npm run build",
+      "type": "shell",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "command": "npm run build"
+    },
+    {
+      "label": "T103: npm run preview",
+      "type": "shell",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "command": "npm run preview"
+    },
+    {
+      "label": "T104: npm run deploy",
+      "type": "shell",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "command": "npm run deploy"
+    }
+  ]
+}

@@ -1,42 +1,65 @@
-# location-logger-cf
+# Location Logger for Cloudflare Workers, D1
 
-This template should help get you started developing with Vue 3 in Vite.
+Cloudflare D1を使って位置情報を記録するSPAを実装しました。
 
-## Recommended IDE Setup
+## セットアップ
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+```bash
+# パッケージのインストール
+npm i
 
-## Recommended Browser Setup
+# D1データベースの作成: wrangler.jsoncの"d1_databases"を削除してから実行する
+npx wrangler d1 create location_logger_db --binding DB --use-remote
 
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd)
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
-
-## Type Support for `.vue` Imports in TS
-
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
-
-```sh
-npm install
+# Workerコンフィグレーションから型を生成する: .envがあるとEnvインターフェースに追加されてしまう点に注意
+npx wrangler types
 ```
 
-### Compile and Hot-Reload for Development
+`drizzle.config.ts`で使用する[環境変数の値](https://orm.drizzle.team/docs/guides/d1-http-with-drizzle-kit)を`.env`に保存します。各設定値は、Cloudflareにログインしてダッシュボード画面で取得できます。
 
-```sh
-npm run dev
+```.env
+CLOUDFLARE_ACCOUNT_ID=<Workers & PagesのAccount Detailsに記載されているAccount ID>
+CLOUDFLARE_DATABASE_ID=<上記コマンドで作成したD1データベースのdatabase_id (UUID)>
+CLOUDFLARE_D1_TOKEN=<マイプロフィールでD1の編集権を備えたカスタムAPIトークンを作成する>
 ```
 
-### Type-Check, Compile and Minify for Production
+`drizzle/schema.ts`で定義したテーブルのマイグレーションファイルを`drizzle/migrations`フォルダー内に生成してD1データベースに反映します。これは、`drizzle/schema.ts`を変更する度に行います。
 
-```sh
-npm run build
+```bash
+# マイグレーションファイルを生成する (drizzle/migrations)
+npx drizzle-kit generate
+
+# D1データベースにマイグレーションを実行する
+npx drizzle-kit migrate
+
+# D1データベースにテーブルができていることを確認する
+npx wrangler d1 execute location_logger_db --remote --command "SELECT tbl_name, sql FROM sqlite_schema WHERE type ='table';"
+```
+
+## デバッグ
+
+`npx wrangler dev`を使うと`./dist`配下のプログラムで起動するため、デバッガをアタッチするとソースコードのブレークポイントが無効になります。
+
+`npm run dev`を使えば、デバッガをアタッチしたときにソースコードに設定したブレークポイントが有効になります。
+
+デバッガのポート番号は、`vite.config.ts`の`cloudflare`プラグインにパラメータを指定して変更できます。
+
+```vite.config.ts
+  plugins: [
+    vue(),
+    vueDevTools(),
+    cloudflare({
+      inspectorPort: 19229, /* デバッガがアタッチするポート番号 */
+    })
+  ],
+```
+
+なお、デバッグ時もD1データベースを使用するため、通信や使用量に配慮する必要があります。
+
+## デプロイ
+
+事前に`npm run build`でビルドが正常にできることを確認してからデプロイします。
+
+```bash
+npm run deploy
 ```
