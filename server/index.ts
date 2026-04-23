@@ -56,7 +56,7 @@ app.get('/api/v1/location', async (c: Context) => {
       longitude: row.longitude,
       distance: row.distance,
       address: row.address,
-    }))
+    } as Location))
   )
 })
 
