@@ -10,6 +10,9 @@ Laravel+Vue3で作った位置情報を記録するSPAの習作を、Cloudflare 
 
 <img src="./screenshot.png" width="1200px" alt="スクリーンショット">
 
+本アプリのデモ用サイトは[https://location-logger.y-app.cc](https://location-logger.y-app.cc)です。
+開発が継続している間は、記録した位置情報を予告無く削除する場合がありますので、ご承知ください。
+
 ## セットアップ
 
 ```bash
