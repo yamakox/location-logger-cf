@@ -43,14 +43,14 @@ app.get('/api/v1/client', async (c: Context) => {
 app.get('/api/v1/location', async (c: Context) => {
   const db = drizzle(c.env.DB)
   const client = await getClient(db, c)
-  const locationRows = await db
+  const locationRows: LocationRow[] = await db
     .select()
     .from(locations)
     .where(eq(locations.clientId, client.id))
     .orderBy(desc(locations.timestamp))
     .limit(MAX_LOCATION_COUNT)
   return c.json(
-    locationRows.map((row) => ({
+    locationRows.map((row: LocationRow) => ({
       timestamp: row.timestamp,
       latitude: row.latitude,
       longitude: row.longitude,
