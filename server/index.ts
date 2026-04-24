@@ -1,11 +1,11 @@
 import { Hono, Context } from 'hono'
 import { HTTPException } from 'hono/http-exception'
-import { cors } from 'hono/cors'
 import { getCookie, setCookie } from 'hono/cookie'
 import { drizzle, DrizzleD1Database } from 'drizzle-orm/d1'
 import { clients, locations } from '../drizzle/schema'
 import { Client, Location } from '../src/shared/model'
 import { eq, desc } from 'drizzle-orm'
+// import { cors } from 'hono/cors'
 
 const VERSION = '0.0.1'
 const MAX_LOCATION_COUNT = 300
@@ -16,6 +16,7 @@ type LocationRow = typeof locations.$inferSelect
 const app = new Hono<{ Bindings: Env }>()
 
 // CORSミドルウェア
+/*
 app.use(
   '*',
   cors({
@@ -24,6 +25,7 @@ app.use(
     allowHeaders: ['Content-Type'],
   })
 )
+*/
 
 app.onError((err: Error | HTTPException, c: Context) => {
   const errorMessage = err?.message || err?.toString() || 'Unknown error'

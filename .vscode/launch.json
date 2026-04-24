@@ -6,10 +6,6 @@
       "type": "node",
       "request": "attach",
       "port": 9229,
-      "resolveSourceMapLocations": null,
-      "attachExistingChildren": false,
-      "autoAttachChildProcesses": false,
-      "sourceMaps": true
     }
   ]
 }
