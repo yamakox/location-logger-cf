@@ -52,13 +52,16 @@ app.get('/api/v1/location', async (c: Context) => {
     .orderBy(desc(locations.timestamp))
     .limit(MAX_LOCATION_COUNT)
   return c.json(
-    locationRows.map((row: LocationRow) => ({
-      timestamp: row.timestamp,
-      latitude: row.latitude,
-      longitude: row.longitude,
-      distance: row.distance,
-      address: row.address,
-    } as Location))
+    locationRows.map(
+      (row: LocationRow) =>
+        ({
+          timestamp: row.timestamp,
+          latitude: row.latitude,
+          longitude: row.longitude,
+          distance: row.distance,
+          address: row.address,
+        }) as Location
+    )
   )
 })
 
@@ -88,9 +91,6 @@ async function getClient(
   const cid = getCookie(c, 'cid')
   if (cid) {
     clientRow = await db.select().from(clients).where(eq(clients.cid, cid)).limit(1)
-    if (clientRow.length > 0) {
-      return clientRow[0] as Client
-    }
   }
   if (clientRow.length === 0) {
     clientRow = await db
@@ -101,7 +101,13 @@ async function getClient(
       })
       .returning()
   }
-  setCookie(c, 'cid', clientRow[0].cid)
+  setCookie(c, 'cid', clientRow[0].cid, {
+    maxAge: 365 * 24 * 60 * 60, // 最大400日まで設定可能
+    path: '/',
+    secure: true,
+    httpOnly: true,
+    sameSite: 'Strict',
+  })
   return clientRow[0] as Client
 }
 
