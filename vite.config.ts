@@ -2,7 +2,6 @@ import { fileURLToPath, URL } from 'node:url'
 
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import vueDevTools from 'vite-plugin-vue-devtools'
 
 import { cloudflare } from '@cloudflare/vite-plugin'
 
@@ -22,7 +21,6 @@ export default defineConfig({
   },
   plugins: [
     vue(),
-    vueDevTools(),
     cloudflare({
       /* デバッガのポート番号を指定する場合は、コメントを外す
       inspectorPort: 19229,
