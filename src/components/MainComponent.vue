@@ -91,6 +91,9 @@ import DataTablesCore from 'datatables.net'
 import 'datatables.net-select'
 import axios from 'axios'
 
+// クライアントのデバッグ用フラグ
+const debugClient = false
+
 // DataTableの初期化
 DataTable.use(DataTablesCore)
 const columns = [
@@ -250,20 +253,19 @@ async function postLocation() {
 onMounted(async () => {
   console.log('MainComponent.onMounted')
   try {
-    // バージョン情報の取得
-    const resVersion = await axios.get(`/api/v1/misc/version`, {
+    // バージョン情報とCIDの取得
+    const promiseVersion = axios.get(`/api/v1/misc/version`, {
       withCredentials: true,
     })
+    const promiseClient = axios.get(`/api/v1/client`, {
+      withCredentials: true,
+    })
+    const [resVersion, resClient] = await Promise.all([promiseVersion, promiseClient])
     version.value = resVersion.data?.version ?? '-----'
-
-    // CIDの取得
-    const resClient = await axios.get(`/api/v1/client`, {
-      withCredentials: true,
-    })
     cid.value = resClient.data?.cid ?? '-----'
 
     // 位置情報の一覧の取得
-    if (true) {
+    if (!debugClient) {
       const resLocation = await axios.get(`/api/v1/location`, {
         withCredentials: true,
       })
