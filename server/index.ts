@@ -83,10 +83,7 @@ app.post('/api/v1/location', async (c: Context) => {
   return c.json({ id: locationRow[0].id })
 })
 
-async function getClient(
-  db: DrizzleD1Database<Record<string, never>>,
-  c: Context
-): Promise<Client> {
+async function getClient(db: DrizzleD1Database<Record<string, never>>, c: Context): Promise<Client> {
   var clientRow: ClientRow[] = []
   const cid = getCookie(c, 'cid')
   if (cid) {
