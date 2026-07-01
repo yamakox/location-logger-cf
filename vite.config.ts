@@ -20,11 +20,9 @@ export default defineConfig(({ mode }) => {
     },
     build: {
       chunkSizeWarningLimit: 1000,
-      outDir: fileURLToPath(
-        new URL(env.BUILD_DIR || "./dist", import.meta.url)
-      ),
+      outDir: fileURLToPath(new URL(env.BUILD_DIR || './dist', import.meta.url)),
       emptyOutDir: true, // ビルド時にフォルダーを空にする(以前のjsファイルなどが残るため)
-  },
+    },
     plugins: [
       vue(),
       cloudflare({
