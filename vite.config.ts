@@ -18,6 +18,7 @@ export default defineConfig({
   },
   build: {
     chunkSizeWarningLimit: 1000,
+    outDir: './dist',
   },
   plugins: [
     vue(),

@@ -8,7 +8,6 @@
   "compatibility_date": "2026-04-19",
   "main": "server/index.ts",
   "assets": {
-    "directory": "./dist",
     "not_found_handling": "single-page-application",
   },
   "observability": {
@@ -22,6 +21,12 @@
       "database_name": "location_logger_db",
       "database_id": "708c31d6-b56d-4943-867c-b07f3c6f79d5",
       "remote": true,
+    },
+  ],
+  "routes": [
+    {
+      "pattern": "location-logger.y-app.cc",
+      "custom_domain": true,
     },
   ],
   /**
